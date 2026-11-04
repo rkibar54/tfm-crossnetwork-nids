@@ -1,0 +1,8 @@
+numpy
+pandas
+scipy
+scikit-learn>=1.6
+# only needed to re-run the experiments:
+tabpfn==9.2.0
+tabicl
+torch
