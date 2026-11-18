@@ -1,8 +1,12 @@
 numpy
 pandas
 scipy
+matplotlib
 scikit-learn>=1.6
 # only needed to re-run the experiments:
-tabpfn==9.2.0
+tabpfn>=9.2.0
+lightgbm
+xgboost
+catboost
 tabicl
 torch

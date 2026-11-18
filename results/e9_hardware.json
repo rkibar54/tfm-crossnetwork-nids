@@ -1,0 +1,18 @@
+{
+  "python": "3.13.16",
+  "platform": "Linux-6.18.55+-x86_64-with-glibc2.39",
+  "cpu_count": 4,
+  "cpu_threads_used_by_boosters": 4,
+  "gpus": [
+    "Tesla T4",
+    "Tesla T4"
+  ],
+  "torch": "2.11.0+cu130",
+  "sklearn": "1.6.1",
+  "lightgbm": "4.6.0",
+  "xgboost": "3.4.1",
+  "catboost": "1.2.10",
+  "tabpfn": "10.2.0",
+  "tabicl": "?",
+  "cpu_model": "Intel(R) Xeon(R) CPU @ 2.00GHz"
+}
