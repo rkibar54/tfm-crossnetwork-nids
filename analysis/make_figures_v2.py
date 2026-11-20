@@ -45,6 +45,13 @@ def boot(v, n=10_000, seed=0):
     return v.mean(), np.percentile(b, 2.5), np.percentile(b, 97.5)
 
 
+def tci(tm):
+    """Mean of target means with a 95% t-interval (targets are the independent units)."""
+    tm = np.asarray(tm, float); m = tm.mean()
+    h = stats.t.ppf(0.975, len(tm) - 1) * tm.std(ddof=1) / np.sqrt(len(tm))
+    return m, m - h, m + h
+
+
 def hboot(d, n=4000, seed=0):
     """Hierarchical bootstrap: resample targets, then seeds within each target (d indexed by target, seed)."""
     rng = np.random.default_rng(seed)
@@ -80,7 +87,7 @@ for mod in TF:
     c, mk, _ = STY[mod]
     for ref, name, ls, filled in [(avg, "avg. classical", "-", True), (orc, "oracle", ":", False)]:
         d = pv[mod] - ref
-        r = [hboot(d.xs(k, level="k")) for k in K]
+        r = [tci(d.xs(k, level="k").groupby(level="target").mean().values) for k in K]
         mu, lo, hi = map(np.array, zip(*r))
         a2.errorbar(np.array(K) * off[mod], mu, yerr=[mu - lo, hi - mu], color=c, marker=mk, ls=ls, lw=1.1,
                     ms=4, capsize=2, mfc=c if filled else "white", label=f"{mod} $-$ {name}")
