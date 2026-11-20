@@ -45,6 +45,16 @@ def boot(v, n=10_000, seed=0):
     return v.mean(), np.percentile(b, 2.5), np.percentile(b, 97.5)
 
 
+def hboot(d, n=4000, seed=0):
+    """Hierarchical bootstrap: resample targets, then seeds within each target (d indexed by target, seed)."""
+    rng = np.random.default_rng(seed)
+    g = {t: d.xs(t, level="target").values for t in d.index.get_level_values("target").unique()}
+    tg = list(g); out = np.empty(n)
+    for i in range(n):
+        out[i] = np.mean([rng.choice(g[t], len(g[t])).mean() for t in rng.choice(tg, len(tg))])
+    return d.mean(), np.percentile(out, 2.5), np.percentile(out, 97.5)
+
+
 e8 = pd.read_csv(f"{RES}/e8_runs.csv"); e8["source"] = e8.source.fillna("")
 e9 = pd.read_csv(f"{RES}/e9_runs.csv")
 A = e9[(e9.method == "target-only") & (e9.features == "all")]
@@ -70,7 +80,7 @@ for mod in TF:
     c, mk, _ = STY[mod]
     for ref, name, ls, filled in [(avg, "avg. classical", "-", True), (orc, "oracle", ":", False)]:
         d = pv[mod] - ref
-        r = [boot(d.xs(k, level="k").values) for k in K]
+        r = [hboot(d.xs(k, level="k")) for k in K]
         mu, lo, hi = map(np.array, zip(*r))
         a2.errorbar(np.array(K) * off[mod], mu, yerr=[mu - lo, hi - mu], color=c, marker=mk, ls=ls, lw=1.1,
                     ms=4, capsize=2, mfc=c if filled else "white", label=f"{mod} $-$ {name}")

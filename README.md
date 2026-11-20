@@ -29,6 +29,7 @@ pip install -r requirements.txt
 python analysis/analyze_e7.py results/e7_runs.csv
 python analysis/analyze_e8.py results/e8_runs.csv
 python analysis/analyze_e9.py   # reads results/e9_runs.csv and results/e8_runs.csv
+python analysis/analyze_units.py   # pair-level RQ3 tests and hierarchical bootstrap for RQ1
 python analysis/make_figures.py results/e8_runs.csv figures
 ```
 
